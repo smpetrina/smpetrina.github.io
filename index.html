@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Diuretic Resistance Calculator - Heart Failure</title>
+    <style>
+        :root {
+            --primary-blue: #1a237e;
+            --secondary-blue: #283593;
+            --accent-blue: #3949ab;
+            --danger-red: #c62828;
+            --warning-orange: #ef6c00;
+            --success-green: #2e7d32;
+            --light-gray: #f5f7fa;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #424242;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 15px;
+            max-width: 900px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+        
+        .header-section {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            padding: 25px;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 5px 20px rgba(26, 35, 126, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .header-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .header-subtitle {
+            font-size: 1rem;
+            font-weight: 300;
+            opacity: 0.9;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .protocol-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 5px;
+            font-weight: 500;
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid var(--accent-blue);
+            transition: transform 0.3s ease;
+        }
+        
+        .section-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            color: var(--primary-blue);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .section-title i {
+            margin-right: 12px;
+            font-size: 1.4rem;
+        }
+        
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark-gray);
+            font-size: 1rem;
+        }
+        
+        .input-label small {
+            font-weight: 400;
+            color: #666;
+            font-size: 0.85rem;
+            display: block;
+            margin-top: 3px;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 14px 15px;
+            border: 2px solid var(--medium-gray);
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            background: #fcfcfc;
+        }
+        
+        .input-field:focus {
+            border-color: var(--accent-blue);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(57, 73, 171, 0.1);
+            background: white;
+        }
+        
+        .input-unit {
+            position: absolute;
+            right: 15px;
+            top: 42px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .checklist-group {
+            margin: 20px 0;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        
+        .checklist-item:hover {
+            background: #f0f0f0;
+        }
+        
+        .checklist-item input[type="checkbox"] {
+            margin-right: 15px;
+            margin-top: 3px;
+            transform: scale(1.3);
+            accent-color: var(--accent-blue);
+        }
+        
+        .checklist-label {
+            flex: 1;
+            font-weight: 500;
+            color: var(--dark-gray);
+        }
+        
+        .critical-item {
+            border-left: 4px solid var(--danger-red);
+            background: #fff5f5;
+        }
+        
+        .warning-item {
+            border-left: 4px solid var(--warning-orange);
+            background: #fff8e1;
+        }
+        
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 18px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+            color: white;
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.25);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(26, 35, 126, 0.35);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: var(--dark-gray);
+            border: 2px solid #ddd;
+        }
+        
+        .btn-secondary:hover {
+            background: #e5e5e5;
+        }
+        
+        .results-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-box {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .result-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+        
+        .result-badge {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        
+        .badge-danger {
+            background: #ffebee;
+            color: var(--danger-red);
+            border: 1px solid #ffcdd2;
+        }
+        
+        .badge-warning {
+            background: #fff3e0;
+            color: var(--warning-orange);
+            border: 1px solid #ffe0b2;
+        }
+        
+        .badge-success {
+            background: #e8f5e9;
+            color: var(--success-green);
+            border: 1px solid #c8e6c9;
+        }
+        
+        .parameter-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .parameter-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border-top: 4px solid var(--accent-blue);
+        }
+        
+        .parameter-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+        
+        .parameter-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .protocol-box {
+            margin: 25px 0;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 6px solid;
+        }
+        
+        .protocol-a {
+            background: #e8f4f8;
+            border-left-color: #1976d2;
+        }
+        
+        .protocol-b {
+            background: #f3e5f5;
+            border-left-color: #7b1fa2;
+        }
+        
+        .protocol-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .protocol-title i {
+            margin-right: 10px;
+        }
+        
+        .recommendation-list {
+            margin: 20px 0;
+            padding-left: 25px;
+        }
+        
+        .recommendation-list li {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 30px 0;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent-blue);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding-left: 25px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 5px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+        }
+        
+        .timeline-day {
+            font-weight: 700;
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .footnote {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        
+        .icon {
+            font-style: normal;
+            margin-right: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                min-width: 100%;
+            }
+            
+            .parameter-display {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .header-title {
+                font-size: 1.3rem;
+            }
+            
+            .section-card {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .parameter-display {
+                grid-template-columns: 1fr;
+            }
+            
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-section">
+        <h1 class="header-title">COMPLETE DIURETIC RESISTANCE CALCULATOR</h1>
+        <p class="header-subtitle">Clinical Algorithm for Refractory Congestive Heart Failure Management</p>
+        <div>
+            <span class="protocol-badge">CHLORIDE-GUIDED THERAPY</span>
+            <span class="protocol-badge">ADVOR Protocol</span>
+            <span class="protocol-badge">Spot UNa+ Monitoring</span>
+        </div>
+    </div>
+    
+    <div class="section-card">
+        <h2 class="section-title">🎯 STEP 1: Non-Responder Identification</h2>
+        <p style="margin-bottom: 20px; color: var(--dark-gray);">Precise criteria for early diagnosis of diuretic resistance</p>
+        
+        <div class="input-grid">
+            <div class="input-group">
+                <label class="input-label">
+                    Spot UNa+ (at 2h)
+                    <small>After bolus/initiation of diuretic therapy</small>
+                </label>
+                <input type="number" id="spotUNa" class="input-field" placeholder="e.g., 50" step="0.1" min="0" max="300">
+                <span class="input-unit">mmol/L</span>
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">
+                    Urinary Output (at 6h)
+                    <small>Hourly average after administration</small>
+                </label>
+                <input type="number" id="UO6h" class="input-field" placeholder="e.g., 100" step="1" min="0" max="1000">
+                <span class="input-unit">mL/h</span>
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">
+                    Total Urine Volume (24h)
+                    <small>Cumulative over 24 hours</small>
+                </label>
+                <input type="number" id="vol24h" class="input-field" placeholder="e.g., 2.5" step="0.1" min="0" max="10">
+                <span class="input-unit">Liters</span>
+            </div>
+        </div>
+        
+        <div style="background: #f0f7ff; padding: 15px; border-radius: 8px; margin-top: 20px;">
+            <h3 style="color: var(--primary-blue); margin-bottom: 10px;">⚡ Critical Alert Thresholds</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div style="text-align: center; padding: 10px;">
+                    <div style="font-size: 1.3rem; font-weight: 700; color: var(--danger-red);">&lt; 70 mmol/L</div>
+                    <div style="font-size: 0.9rem; color: #666;">Spot UNa+ (2h)</div>
+                </div>
+                <div style="text-align: center; padding: 10px;">
+                    <div style="font-size: 1.3rem; font-weight: 700; color: var(--danger-red);">&lt; 150 mL/h</div>
+                    <div style="font-size: 0.9rem; color: #666;">UO (6h)</div>
+                </div>
+                <div style="text-align: center; padding: 10px;">
+                    <div style="font-size: 1.3rem; font-weight: 700; color: var(--danger-red);">&lt; 3 L</div>
+                    <div style="font-size: 0.9rem; color: #666;">Volume 24h</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section-card">
+        <h2 class="section-title">🔧 STEP 2: Baseline Treatment Optimization</h2>
+        <p style="margin-bottom: 20px; color: var(--dark-gray);">Mandatory actions before any therapeutic modification</p>
+        
+        <div class="checklist-group">
+            <div class="checklist-item critical-item">
+                <input type="checkbox" id="check1">
+                <label class="checklist-label">
+                    <strong>IV Loop Diuretic</strong><br>
+                    <small>Intravenous administration (bolus or continuous infusion 5-20 mg/h)</small>
+                </label>
+            </div>
+            
+            <div class="checklist-item critical-item">
+                <input type="checkbox" id="check2">
+                <label class="checklist-label">
+                    <strong>Discontinue NSAIDs and Interfering Drugs</strong><br>
+                    <small>NSAIDs inhibit renal prostaglandins necessary for renal blood flow</small>
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="check3">
+                <label class="checklist-label">
+                    <strong>Complete Electrolyte Profile</strong><br>
+                    <small>Na⁺, Cl⁻, K⁺, Creatinine/eGFR, Blood Gas Analysis</small>
+                </label>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="check4">
+                <label class="checklist-label">
+                    <strong>Sodium and Fluid Restriction</strong><br>
+                    <small>Low-sodium diet and fluid intake control</small>
+                </label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section-card">
+        <h2 class="section-title">🧪 STEP 3: Strategic Decision Fork - Electrolyte Analysis</h2>
+        <p style="margin-bottom: 20px; color: var(--dark-gray);">Decision fork based on serum chloride (threshold 99 mmol/L)</p>
+        
+        <div class="input-grid">
+            <div class="input-group">
+                <label class="input-label">
+                    Serum Chloride (Cl⁻)
+                    <small>Key marker of tubuloglomerular feedback</small>
+                </label>
+                <input type="number" id="chloride" class="input-field" placeholder="e.g., 95" step="0.1" min="70" max="130">
+                <span class="input-unit">mmol/L</span>
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">
+                    Serum Sodium (Na⁺)
+                    <small>Determines pharmacological strategy</small>
+                </label>
+                <input type="number" id="sodium" class="input-field" placeholder="e.g., 135" step="0.1" min="110" max="160">
+                <span class="input-unit">mmol/L</span>
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">
+                    Serum Potassium (K⁺)
+                    <small>Safety assessment for therapy</small>
+                </label>
+                <input type="number" id="potassium" class="input-field" placeholder="e.g., 4.0" step="0.1" min="2" max="7">
+                <span class="input-unit">mmol/L</span>
+            </div>
+        </div>
+        
+        <div style="margin-top: 25px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+            <h3 style="color: var(--primary-blue); margin-bottom: 15px;">📊 Sodium Decision Thresholds</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
+                <div style="text-align: center; padding: 15px; background: #e8f5e9; border-radius: 8px;">
+                    <div style="font-size: 1.2rem; font-weight: 700; color: var(--success-green);">Na⁺ ≥ 135</div>
+                    <div style="font-size: 0.85rem; color: #666; margin-top: 5px;">Green light for Thiazides</div>
+                </div>
+                <div style="text-align: center; padding: 15px; background: #fff3e0; border-radius: 8px;">
+                    <div style="font-size: 1.2rem; font-weight: 700; color: var(--warning-orange);">Na⁺ ≥ 132</div>
+                    <div style="font-size: 0.85rem; color: #666; margin-top: 5px;">Proceed with SGLT2i and Acetazolamide</div>
+                </div>
+                <div style="text-align: center; padding: 15px; background: #ffebee; border-radius: 8px;">
+                    <div style="font-size: 1.2rem; font-weight: 700; color: var(--danger-red);">Na⁺ ≤ 132</div>
+                    <div style="font-size: 0.85rem; color: #666; margin-top: 5px;">Domain of Aquaretics</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="btn-container">
+        <button id="calculateBtn" class="btn btn-primary">
+            <span class="icon">🧮</span>
+            ANALYZE AND GENERATE TREATMENT PLAN
+        </button>
+        <button id="resetBtn" class="btn btn-secondary">
+            <span class="icon">🔄</span>
+            RESET ALL VALUES
+        </button>
+    </div>
+    
+    <div id="resultsSection" class="results-section">
+        <div class="result-box">
+            <div class="result-header">
+                <h2 class="result-title">ANALYSIS RESULT</h2>
+                <div id="riskBadge" class="result-badge">--</div>
+            </div>
+            
+            <div class="parameter-display">
+                <div class="parameter-card">
+                    <div class="parameter-value" id="displayCl">--</div>
+                    <div class="parameter-label">SERUM CHLORIDE</div>
+                </div>
+                <div class="parameter-card">
+                    <div class="parameter-value" id="displayNa">--</div>
+                    <div class="parameter-label">SERUM SODIUM</div>
+                </div>
+                <div class="parameter-card">
+                    <div class="parameter-value" id="displayUNa">--</div>
+                    <div class="parameter-label">SPOT UNa+</div>
+                </div>
+                <div class="parameter-card">
+                    <div class="parameter-value" id="displayProtocol">--</div>
+                    <div class="parameter-label">PROTOCOL</div>
+                </div>
+            </div>
+            
+            <div id="nonResponderAlert" style="display: none;">
+                <div style="background: #fff3e0; border-left: 4px solid var(--warning-orange); padding: 15px; border-radius: 8px; margin: 20px 0;">
+                    <h3 style="color: var(--warning-orange); margin-bottom: 10px;">⚠️ NON-RESPONDER PATIENT IDENTIFIED</h3>
+                    <p style="color: #666;">Diuretic resistance criteria satisfied:</p>
+                    <ul id="nonResponderList" style="margin-top: 10px; padding-left: 20px; color: #666;">
+                        <!-- Dynamic list -->
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="protocolBox" class="protocol-box">
+                <!-- Dynamic protocol -->
+            </div>
+        </div>
+        
+        <div class="result-box">
+            <h2 class="section-title">📅 INTERVENTION TIMELINE</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-day">DAY 1 - ATTACK PHASE</div>
+                    <div id="day1Plan" style="color: var(--dark-gray);">
+                        <!-- Dynamic Day 1 plan -->
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-day">DAY 2 - CONSOLIDATION PHASE</div>
+                    <div id="day2Plan" style="color: var(--dark-gray);">
+                        <!-- Dynamic Day 2 plan -->
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <h3 style="color: var(--primary-blue); margin-bottom: 15px;">🎯 DE-ESCALATION CRITERIA</h3>
+                <p style="color: var(--dark-gray); margin-bottom: 10px;">Reduce therapy only when ALL these conditions are met:</p>
+                <ol style="padding-left: 25px; color: var(--dark-gray);">
+                    <li style="margin-bottom: 8px;"><strong>Clinically resolved congestion</strong></li>
+                    <li style="margin-bottom: 8px;"><strong>Serum chloride ≥ 99 mmol/L</strong></li>
+                    <li style="margin-bottom: 8px;"><strong>Spot UNa+ ≥ 70 mmol/L</strong> (sign of recovered renal efficiency)</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="result-box">
+            <h2 class="section-title">📝 CLINICIAN'S MNEMONIC SUMMARY</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                <div style="background: #f0f7ff; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: var(--primary-blue); margin-bottom: 10px;">🚨 The 3 Warning Signs</h4>
+                    <ul style="padding-left: 20px; color: var(--dark-gray);">
+                        <li>Spot UNa+ &lt; 70 (2h)</li>
+                        <li>UO &lt; 150 mL/h (6h)</li>
+                        <li>UO &lt; 3L (24h)</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #f3e5f5; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #7b1fa2; margin-bottom: 10px;">🎯 Decision Threshold</h4>
+                    <p style="color: var(--dark-gray); margin-bottom: 10px;"><strong>Chloride = 99 mmol/L</strong></p>
+                    <ul style="padding-left: 20px; color: var(--dark-gray);">
+                        <li>Below = Chloride restoration/sparing</li>
+                        <li>Above = Thiazides</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #e8f5e9; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: var(--success-green); margin-bottom: 10px;">⚠️ Absolute Limit</h4>
+                    <p style="color: var(--dark-gray);"><strong>Maximum loop diuretic dose:</strong></p>
+                    <p style="font-size: 1.3rem; font-weight: 700; color: var(--danger-red); text-align: center; margin-top: 10px;">600 mg/day</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footnote">
+            <p><strong>Disclaimer:</strong> This tool is designed to support clinical decision-making, not to replace it.</p>
+            <p>Based on: CHLORIDE-GUIDED Protocol, ADVOR Study (NEJM 2022), ESC Guidelines 2021.</p>
+            <p style="margin-top: 10px; font-size: 0.8rem; color: #888;">Version 2.0 - For professional use</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculateBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const resultsSection = document.getElementById('resultsSection');
+            
+            calculateBtn.addEventListener('click', calculate);
+            resetBtn.addEventListener('click', resetAll);
+            
+            // Example values for testing
+            // document.getElementById('spotUNa').value = '50';
+            // document.getElementById('UO6h').value = '120';
+            // document.getElementById('vol24h').value = '2.5';
+            // document.getElementById('chloride').value = '95';
+            // document.getElementById('sodium').value = '133';
+            // document.getElementById('potassium').value = '4.0';
+        });
+        
+        function calculate() {
+            // Get values
+            const spotUNa = parseFloat(document.getElementById('spotUNa').value);
+            const UO6h = parseFloat(document.getElementById('UO6h').value);
+            const vol24h = parseFloat(document.getElementById('vol24h').value);
+            const chloride = parseFloat(document.getElementById('chloride').value);
+            const sodium = parseFloat(document.getElementById('sodium').value);
+            const potassium = parseFloat(document.getElementById('potassium').value);
+            
+            // Validation
+            if (isNaN(chloride) || isNaN(sodium)) {
+                alert("Please enter valid values for Cl⁻ and Na⁺ (required fields)");
+                return;
+            }
+            
+            // Determine if non-responder
+            const nonResponderCriteria = [];
+            if (!isNaN(spotUNa) && spotUNa < 70) nonResponderCriteria.push("Spot UNa+ < 70 mmol/L (at 2h)");
+            if (!isNaN(UO6h) && UO6h < 150) nonResponderCriteria.push("UO < 150 mL/h (at 6h)");
+            if (!isNaN(vol24h) && vol24h < 3) nonResponderCriteria.push("Volume 24h < 3 L");
+            
+            const isNonResponder = nonResponderCriteria.length > 0;
+            
+            // Determine protocol (A or B) based on chloride
+            const protocol = chloride < 99 ? "A" : "B";
+            
+            // Determine risk level
+            let riskLevel = "";
+            let riskBadgeClass = "";
+            
+            if (isNonResponder && chloride < 99) {
+                riskLevel = "HIGH RISK";
+                riskBadgeClass = "badge-danger";
+            } else if (isNonResponder || chloride < 99) {
+                riskLevel = "MODERATE RISK";
+                riskBadgeClass = "badge-warning";
+            } else {
+                riskLevel = "LOW RISK";
+                riskBadgeClass = "badge-success";
+            }
+            
+            // Update display values
+            document.getElementById('displayCl').textContent = isNaN(chloride) ? "--" : chloride;
+            document.getElementById('displayNa').textContent = isNaN(sodium) ? "--" : sodium;
+            document.getElementById('displayUNa').textContent = isNaN(spotUNa) ? "--" : spotUNa;
+            document.getElementById('displayProtocol').textContent = `PROTOCOL ${protocol}`;
+            
+            // Update risk badge
+            const riskBadge = document.getElementById('riskBadge');
+            riskBadge.textContent = riskLevel;
+            riskBadge.className = `result-badge ${riskBadgeClass}`;
+            
+            // Show/hide non-responder alert
+            const nonResponderAlert = document.getElementById('nonResponderAlert');
+            const nonResponderList = document.getElementById('nonResponderList');
+            
+            if (isNonResponder) {
+                nonResponderAlert.style.display = 'block';
+                nonResponderList.innerHTML = nonResponderCriteria.map(criteria => `<li>${criteria}</li>`).join('');
+            } else {
+                nonResponderAlert.style.display = 'none';
+            }
+            
+            // Generate specific protocol
+            const protocolBox = document.getElementById('protocolBox');
+            let protocolHTML = "";
+            
+            if (protocol === "A") {
+                // PROTOCOL A: Hypochloremia (Cl < 99)
+                protocolBox.className = "protocol-box protocol-a";
+                
+                protocolHTML = `
+                    <div class="protocol-title">
+                        <span class="icon">🅰️</span>
+                        PROTOCOL A - HYPOCHLOREMIA (Cl⁻ < 99 mmol/L)
+                    </div>
+                    <p style="color: var(--dark-gray); margin-bottom: 15px;">
+                        <strong>Resistance driven by activated tubuloglomerular feedback.</strong><br>
+                        Strategy: Chloride sparing, deficit correction, and aquaresis.
+                    </p>
+                    <div style="background: rgba(25, 118, 210, 0.1); padding: 15px; border-radius: 8px; margin: 20px 0;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">⚡ ABSOLUTE CONTRAINDICATION</h4>
+                        <p style="color: var(--danger-red); font-weight: 600;">
+                            DO NOT use thiazide diuretics in hypochloremic patients, especially if Na⁺ < 135 mmol/L!
+                        </p>
+                    </div>
+                    <h4 style="color: var(--primary-blue); margin: 20px 0 10px 0;">🎯 THERAPEUTIC RECOMMENDATIONS</h4>
+                `;
+                
+                // Sodium-based recommendations for protocol A
+                if (sodium <= 132) {
+                    protocolHTML += `
+                        <ul class="recommendation-list">
+                            <li><strong>AQUARETICS:</strong> Tolvaptan or Urea (choice for dilutional hyponatremia)</li>
+                            <li><strong>CHLORIDE REPLETION:</strong> 0.9% Saline or Hypertonic Saline (if dilutional or symptomatic hyponatremia)</li>
+                            <li><strong>STRICT MONITORING:</strong> Daily Na⁺ (risk of worsening hyponatremia)</li>
+                            <li><strong>AVOID:</strong> SGLT2i, Thiazides, Acetazolamide</li>
+                        </ul>
+                    `;
+                } else if (sodium >= 132 && sodium < 135) {
+                    protocolHTML += `
+                        <ul class="recommendation-list">
+                            <li><strong>CHLORIDE-SPARING DIURETICS:</strong>
+                                <ul style="padding-left: 20px; margin-top: 5px;">
+                                    <li>Acetazolamide: 500 mg IV bolus or 250-500 mg/day PO</li>
+                                    <li>SGLT2i (Dapagliflozin/Empagliflozin): Safe if Na⁺ ≥ 132</li>
+                                </ul>
+                            </li>
+                            <li><strong>SUPPLEMENTATION:</strong> KCl or Lysine Chloride (if Na⁺ ≥ 140 or metabolic alkalosis)</li>
+                            <li><strong>AQUARETICS:</strong> Consider if Na⁺ ≤ 132 mmol/L</li>
+                        </ul>
+                    `;
+                } else { // sodium >= 135
+                    protocolHTML += `
+                        <ul class="recommendation-list">
+                            <li><strong>CHLORIDE-SPARING DIURETICS:</strong>
+                                <ul style="padding-left: 20px; margin-top: 5px;">
+                                    <li>Acetazolamide: 500 mg IV bolus or 250-500 mg/day PO</li>
+                                    <li>SGLT2i (Dapagliflozin/Empagliflozin): Safe</li>
+                                </ul>
+                            </li>
+                            <li><strong>DIRECT SUPPLEMENTATION:</strong> KCl or Lysine Chloride (indicated if Na⁺ ≥ 140 or metabolic alkalosis)</li>
+                            <li><strong>AQUARETICS:</strong> Consider only if dilutional hyponatremia develops</li>
+                        </ul>
+                    `;
+                }
+                
+            } else {
+                // PROTOCOL B: Normo/Hyperchloremia (Cl ≥ 99)
+                protocolBox.className = "protocol-box protocol-b";
+                
+                protocolHTML = `
+                    <div class="protocol-title">
+                        <span class="icon">🅱️</span>
+                        PROTOCOL B - NORMO/HYPERCHLOREMIA (Cl⁻ ≥ 99 mmol/L)
+                    </div>
+                    <p style="color: var(--dark-gray); margin-bottom: 15px;">
+                        <strong>Resistance due to compensatory distal reabsorption.</strong><br>
+                        Strategy: Sequential nephron blockade.
+                    </p>
+                    <h4 style="color: #7b1fa2; margin: 20px 0 10px 0;">🎯 THERAPEUTIC RECOMMENDATIONS</h4>
+                `;
+                
+                // Sodium-based recommendations for protocol B
+                if (sodium >= 135) {
+                    protocolHTML += `
+                        <ul class="recommendation-list">
+                            <li><strong>THIAZIDES:</strong> Hydrochlorothiazide, Chlorthalidone or Metolazone</li>
+                            <li><strong>SGLT2i AND ACETAZOLAMIDE:</strong> Enhance proximal natriuresis</li>
+                            <li><strong>MRA (Mineralocorticoid Receptor Antagonists):</strong> Spironolactone, Eplerenone or Finerenone</li>
+                            <li><strong>AQUARETICS:</strong> Consider only if dilutional hyponatremia develops (Na⁺ ≤ 132)</li>
+                        </ul>
+                    `;
+                } else if (sodium >= 132 && sodium < 135) {
+                    protocolHTML += `
+                        <ul class="recommendation-list">
+                            <li><strong>SGLT2i AND ACETAZOLAMIDE:</strong> Enhance proximal natriuresis (Na⁺ ≥ 132)</li>
+                            <li><strong>MRA (Mineralocorticoid Receptor Antagonists):</strong> Continue/initiate. If Na⁺ ≥ 132 maintain dose</li>
+                            <li><strong>AQUARETICS:</strong> Consider if Na⁺ ≤ 132 mmol/L</li>
+                            <li><strong>AVOID:</strong> Thiazides (because Na⁺ < 135)</li>
+                        </ul>
+                    `;
+                } else { // sodium <= 132
+                    protocolHTML += `
+                        <ul class="recommendation-list">
+                            <li><strong>AQUARETICS:</strong> Tolvaptan for dilutional hyponatremia</li>
+                            <li><strong>MRA (Mineralocorticoid Receptor Antagonists):</strong> Daily biochemical monitoring (if Na⁺ ≤ 131)</li>
+                            <li><strong>AVOID:</strong> Thiazides, SGLT2i (monitor strictly if 125-131)</li>
+                        </ul>
+                    `;
+                }
+            }
+            
+            protocolBox.innerHTML = protocolHTML;
+            
+            // Generate Day 1 plan
+            const day1Plan = document.getElementById('day1Plan');
+            let day1HTML = "";
+            
+            if (isNonResponder) {
+                day1HTML = `
+                    <p style="margin-bottom: 10px;"><strong>⚠️ Patient identified as NON-RESPONDER</strong></p>
+                    <ul style="padding-left: 20px; color: var(--dark-gray);">
+                        <li><strong>Double the dose</strong> of IV loop diuretic up to maximum of 600 mg/day</li>
+                        <li>Consider continuous infusion (5-20 mg/h) if bolus fails</li>
+                        <li>Immediately activate Protocol ${protocol}</li>
+                    </ul>
+                    <p style="margin-top: 15px; color: var(--danger-red); font-weight: 600;">
+                        ⚠️ If chloride normalizes (≥ 99) but natriuresis remains low, IMMEDIATELY add thiazide (only if Na⁺ ≥ 135)
+                    </p>
+                `;
+            } else {
+                day1HTML = `
+                    <p style="margin-bottom: 10px;"><strong>✅ Patient with adequate response</strong></p>
+                    <ul style="padding-left: 20px; color: var(--dark-gray);">
+                        <li>Continue current loop diuretic dose</li>
+                        <li>Initiate Protocol ${protocol} as per recommendations</li>
+                        <li>Monitor closely: Spot UNa+, urinary output, electrolytes</li>
+                    </ul>
+                `;
+            }
+            
+            day1Plan.innerHTML = day1HTML;
+            
+            // Generate Day 2 plan
+            const day2Plan = document.getElementById('day2Plan');
+            const day2HTML = `
+                <p style="margin-bottom: 10px;"><strong>Goal:</strong> Net loss of ~2 Liters in 24h</p>
+                <ul style="padding-left: 20px; color: var(--dark-gray);">
+                    <li><strong>ASSESS 24h RESPONSE:</strong>
+                        <ul style="padding-left: 20px; margin-top: 5px;">
+                            <li>If output < 3L or cumulative UNa+ < 400 mmol → ESCALATION</li>
+                            <li>Add additional drug according to Protocol ${protocol}</li>
+                            <li>Consider ULTRAFILTRATION if totally refractory</li>
+                        </ul>
+                    </li>
+                    <li><strong>ULTRAFILTRATION also indicated if:</strong>
+                        <ul style="padding-left: 20px; margin-top: 5px;">
+                            <li>Sodium correction too rapid (>10 mmol/L/24h)</li>
+                            <li>Patient totally refractory to medical therapy</li>
+                        </ul>
+                    </li>
+                </ul>
+            `;
+            
+            day2Plan.innerHTML = day2HTML;
+            
+            // Show results section
+            resultsSection.style.display = 'block';
+            
+            // Scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function resetAll() {
+            // Reset all input fields
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                input.value = '';
+            });
+            
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            // Hide results
+            document.getElementById('resultsSection').style.display = 'none';
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
